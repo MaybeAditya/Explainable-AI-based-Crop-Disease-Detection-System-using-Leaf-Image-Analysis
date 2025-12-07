@@ -11,6 +11,9 @@ var whatwgUrl = _interopDefault(require('whatwg-url'));
 var https = _interopDefault(require('https'));
 var zlib = _interopDefault(require('zlib'));
 
+// Based on https://github.com/tmpvar/jsdom/blob/aa85b2abf07766ff7bf5c1f6daafb3726f2f2db5/lib/jsdom/living/blob.js
+
+// fix for "Readable" isn't a named export issue
 const Readable = Stream.Readable;
 
 const BUFFER = Symbol('buffer');
@@ -122,14 +125,27 @@ Object.defineProperty(Blob.prototype, Symbol.toStringTag, {
     configurable: true
 });
 
+/**
+ * fetch-error.js
+ *
+ * FetchError interface for operational errors
+ */
 
+/**
+ * Create FetchError instance
+ *
+ * @param   String      message      Error message for human
+ * @param   String      type         Error type for machine
+ * @param   String      systemError  For Node.js system error
+ * @return  FetchError
+ */
 function FetchError(message, type, systemError) {
     Error.call(this, message);
 
     this.message = message;
     this.type = type;
 
-  
+    // when err.type is `system`, err.code contains system error code
     if (systemError) {
         this.code = this.errno = systemError.code;
     }
@@ -149,10 +165,18 @@ try {
 
 const INTERNALS = Symbol('Body internals');
 
-
+// fix an issue where "PassThrough" isn't a named export for node <10
 const PassThrough = Stream.PassThrough;
 
-
+/**
+ * Body mixin
+ *
+ * Ref: https://fetch.spec.whatwg.org/#body
+ *
+ * @param   Stream  body  Readable stream
+ * @param   Object  opts  Response options
+ * @return  Void
+ */
 function Body(body) {
     var _this = this;
 
@@ -164,19 +188,20 @@ function Body(body) {
     let timeout = _ref$timeout === undefined ? 0 : _ref$timeout;
 
     if (body == null) {
-        
+        // body is undefined or null
         body = null;
     } else if (isURLSearchParams(body)) {
-        
+        // body is a URLSearchParams
         body = Buffer.from(body.toString());
     } else if (isBlob(body)); else if (Buffer.isBuffer(body)); else if (Object.prototype.toString.call(body) === '[object ArrayBuffer]') {
-        
+        // body is ArrayBuffer
         body = Buffer.from(body);
     } else if (ArrayBuffer.isView(body)) {
-        
+        // body is ArrayBufferView
         body = Buffer.from(body.buffer, body.byteOffset, body.byteLength);
     } else if (body instanceof Stream); else {
-      
+        // none of the above
+        // coerce to string then buffer
         body = Buffer.from(String(body));
     }
     this[INTERNALS] = {
@@ -204,14 +229,22 @@ Body.prototype = {
         return this[INTERNALS].disturbed;
     },
 
-    
+    /**
+  * Decode response as ArrayBuffer
+  *
+  * @return  Promise
+  */
     arrayBuffer() {
         return consumeBody.call(this).then(function (buf) {
             return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
         });
     },
 
-   
+    /**
+  * Return raw response as Blob
+  *
+  * @return Promise
+  */
     blob() {
         let ct = this.headers && this.headers.get('content-type') || '';
         return consumeBody.call(this).then(function (buf) {
@@ -225,7 +258,11 @@ Body.prototype = {
         });
     },
 
-   
+    /**
+  * Decode response as json
+  *
+  * @return  Promise
+  */
     json() {
         var _this2 = this;
 
@@ -238,19 +275,32 @@ Body.prototype = {
         });
     },
 
-   
+    /**
+  * Decode response as text
+  *
+  * @return  Promise
+  */
     text() {
         return consumeBody.call(this).then(function (buffer) {
             return buffer.toString();
         });
     },
 
-    
+    /**
+  * Decode response as buffer (non-spec api)
+  *
+  * @return  Promise
+  */
     buffer() {
         return consumeBody.call(this);
     },
 
-    
+    /**
+  * Decode response as text, while automatically detecting the encoding and
+  * trying to decode to UTF-8 (non-spec api)
+  *
+  * @return  Promise
+  */
     textConverted() {
         var _this3 = this;
 
@@ -260,7 +310,7 @@ Body.prototype = {
     }
 };
 
-
+// In browsers, all properties are enumerable.
 Object.defineProperties(Body.prototype, {
     body: { enumerable: true },
     bodyUsed: { enumerable: true },
@@ -272,7 +322,7 @@ Object.defineProperties(Body.prototype, {
 
 Body.mixIn = function (proto) {
     for (const name of Object.getOwnPropertyNames(Body.prototype)) {
-        
+        // istanbul ignore else: future proof
         if (!(name in proto)) {
             const desc = Object.getOwnPropertyDescriptor(Body.prototype, name);
             Object.defineProperty(proto, name, desc);
@@ -280,7 +330,13 @@ Body.mixIn = function (proto) {
     }
 };
 
-
+/**
+ * Consume and convert an entire Body to a Buffer.
+ *
+ * Ref: https://fetch.spec.whatwg.org/#concept-body-consume-body
+ *
+ * @return  Promise
+ */
 function consumeBody() {
     var _this4 = this;
 
@@ -296,27 +352,28 @@ function consumeBody() {
 
     let body = this.body;
 
-    
+    // body is null
     if (body === null) {
         return Body.Promise.resolve(Buffer.alloc(0));
     }
 
-    
+    // body is blob
     if (isBlob(body)) {
         body = body.stream();
     }
 
-    
+    // body is buffer
     if (Buffer.isBuffer(body)) {
         return Body.Promise.resolve(body);
     }
 
-    
+    // istanbul ignore if: should never happen
     if (!(body instanceof Stream)) {
         return Body.Promise.resolve(Buffer.alloc(0));
     }
 
-    
+    // body is stream
+    // get ready to actually consume the body
     let accum = [];
     let accumBytes = 0;
     let abort = false;
@@ -324,7 +381,7 @@ function consumeBody() {
     return new Body.Promise(function (resolve, reject) {
         let resTimeout;
 
-        
+        // allow timeout on slow response body
         if (_this4.timeout) {
             resTimeout = setTimeout(function () {
                 abort = true;
@@ -376,7 +433,14 @@ function consumeBody() {
     });
 }
 
-
+/**
+ * Detect buffer encoding and convert to target encoding
+ * ref: http://www.w3.org/TR/2011/WD-html5-20110113/parsing.html#determining-the-character-encoding
+ *
+ * @param   Buffer  buffer    Incoming buffer
+ * @param   String  encoding  Target encoding
+ * @return  String
+ */
 function convertBody(buffer, headers) {
     if (typeof convert !== 'function') {
         throw new Error('The package `encoding` must be installed to use the textConverted() function');
@@ -434,6 +498,13 @@ function convertBody(buffer, headers) {
     return convert(buffer, 'UTF-8', charset).toString();
 }
 
+/**
+ * Detect a URLSearchParams object
+ * ref: https://github.com/bitinn/node-fetch/issues/296#issuecomment-307598143
+ *
+ * @param   Object  obj     Object to detect by type or brand
+ * @return  String
+ */
 function isURLSearchParams(obj) {
     // Duck-typing as a necessary condition.
     if (typeof obj !== 'object' || typeof obj.append !== 'function' || typeof obj.delete !== 'function' || typeof obj.get !== 'function' || typeof obj.getAll !== 'function' || typeof obj.has !== 'function' || typeof obj.set !== 'function') {
@@ -444,12 +515,21 @@ function isURLSearchParams(obj) {
     return obj.constructor.name === 'URLSearchParams' || Object.prototype.toString.call(obj) === '[object URLSearchParams]' || typeof obj.sort === 'function';
 }
 
-
+/**
+ * Check if `obj` is a W3C `Blob` object (which `File` inherits from)
+ * @param  {*} obj
+ * @return {boolean}
+ */
 function isBlob(obj) {
     return typeof obj === 'object' && typeof obj.arrayBuffer === 'function' && typeof obj.type === 'string' && typeof obj.stream === 'function' && typeof obj.constructor === 'function' && typeof obj.constructor.name === 'string' && /^(Blob|File)$/.test(obj.constructor.name) && /^(Blob|File)$/.test(obj[Symbol.toStringTag]);
 }
 
-
+/**
+ * Clone body given Res/Req instance
+ *
+ * @param   Mixed  instance  Response or Request instance
+ * @return  Mixed
+ */
 function clone(instance) {
     let p1, p2;
     let body = instance.body;
@@ -475,7 +555,15 @@ function clone(instance) {
     return body;
 }
 
-
+/**
+ * Performs the operation "extract a `Content-Type` value from |object|" as
+ * specified in the specification:
+ * https://fetch.spec.whatwg.org/#concept-bodyinit-extract
+ *
+ * This function assumes that instance.body is present.
+ *
+ * @param   Mixed  instance  Any options.body input
+ */
 function extractContentType(body) {
     if (body === null) {
         // body is null
