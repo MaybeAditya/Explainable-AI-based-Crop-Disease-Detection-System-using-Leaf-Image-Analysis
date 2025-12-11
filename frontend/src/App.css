@@ -1,38 +1,494 @@
-.App {
-  text-align: center;
+/* src/App.css */
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+:root {
+  --bg: #051014;
+  --panel: #06161a;
+  --neon: #3cff9a;
+  --neon-2: #00ffd5;
+  --muted: #9fb3b0;
+  --glass: rgba(255, 255, 255, 0.03);
+  --accent: linear-gradient(90deg, var(--neon), var(--neon-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+* {
+  box-sizing: border-box
+}
+
+html,
+body,
+#root {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 800px at 10% 10%, rgba(0, 255, 170, 0.03), transparent),
+    radial-gradient(900px 600px at 90% 80%, rgba(60, 255, 154, 0.02), transparent),
+    var(--bg);
+  color: #d7f7ee;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 28px;
 }
 
-.App-link {
-  color: #61dafb;
+/* container */
+.cc-root {
+  width: 100%;
+  display: flex;
+  justify-content: center
 }
 
-@keyframes App-logo-spin {
+.cc-container {
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 380px 1fr 260px;
+  /* SMALLER → fits laptop screens */
+  gap: 22px;
+  padding: 22px;
+  border: 1px solid rgba(64, 255, 160, 0.06);
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1300px) {
+  .cc-container {
+    grid-template-columns: 1fr;
+    /* STACK everything vertically */
+  }
+}
+
+
+
+/* header */
+.cc-header {
+  grid-column: 1/4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 16px 10px
+}
+
+.cc-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px
+}
+
+.cc-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #042926, #00543a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 255, 170, 0.06)
+}
+
+.cc-sub {
+  font-size: 12px;
+  color: var(--muted)
+}
+
+.cc-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px
+}
+
+.cc-badge {
+  background: linear-gradient(90deg, rgba(60, 255, 154, 0.07), rgba(0, 255, 213, 0.03));
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 255, 170, 0.06);
+  font-weight: 600;
+  font-size: 13px
+}
+
+.cc-muted {
+  color: var(--muted);
+  font-size: 13px
+}
+
+.cc-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 255, 170, 0.06);
+  display: inline-block;
+  font-size: 12px
+}
+
+/* left panel */
+.cc-scan-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-radius: 14px;
+  padding: 18px;
+  height: 100%;
+  border: 1px solid rgba(0, 255, 170, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative
+}
+
+.cc-scan-area {
+  width: 100%;
+  height: 460px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px dashed rgba(0, 255, 170, 0.04);
+  overflow: hidden
+}
+
+.cc-radar {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+.cc-sweep {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%
+}
+
+@keyframes sweep {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg)
   }
+
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg)
   }
+}
+
+.cc-sweep .sector {
+  animation: sweep 6s linear infinite;
+  transform-origin: center
+}
+
+.cc-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(40px);
+  opacity: 0.26;
+  background: radial-gradient(circle at 40% 30%, rgba(60, 255, 154, 0.18), transparent 20%)
+}
+
+.cc-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.0));
+  pointer-events: none;
+  transition: opacity .28s
+}
+
+.cc-flash.active {
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02))
+}
+
+/* floating cards */
+.cc-floating-cards {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px
+}
+
+.cc-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  min-width: 120px;
+  text-align: center;
+  cursor: default
+}
+
+.cc-card input {
+  display: none
+}
+
+.cc-muted-small {
+  color: var(--muted);
+  font-size: 12px
+}
+
+/* scan button */
+.cc-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px
+}
+
+.cc-scan-button {
+  padding: 14px 22px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, var(--neon), #00ffd5);
+  color: #01221a;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 15px;
+  box-shadow: 0 8px 30px rgba(0, 255, 170, 0.12)
+}
+
+/* middle panel */
+.cc-middle-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent);
+  border-radius: 14px;
+  padding: 18px;
+  height: 100%;
+  border: 1px solid rgba(0, 255, 170, 0.03);
+  display: flex;
+  flex-direction: column
+}
+
+.cc-result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between
+}
+
+.cc-result-card {
+  margin-top: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.005));
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 170, 0.02)
+}
+
+.cc-result-left {
+  display: flex;
+  gap: 18px;
+  align-items: center
+}
+
+.cc-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.02)
+}
+
+.cc-result-meta {
+  flex: 1
+}
+
+.cc-progress {
+  height: 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  margin-top: 8px
+}
+
+.cc-progress>i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon), #00ffd5);
+  width: 0%;
+  transition: width 1200ms cubic-bezier(.2, .9, .2, 1)
+}
+
+/* small row */
+.cc-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px
+}
+
+.cc-card.cc-small {
+  flex: 1;
+  padding: 12px
+}
+
+/* right panel */
+.cc-right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px
+}
+
+.cc-logs {
+  flex: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  font-family: monospace;
+  font-size: 12px;
+  color: #b6ffe0;
+  overflow: hidden;
+  position: relative
+}
+
+.cc-log-inner {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  bottom: 12px;
+  overflow: auto;
+  padding-right: 8px
+}
+
+.cc-log-line {
+  padding: 2px 0
+}
+
+.cc-model-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 170, 0.03);
+  min-height: 120px
+}
+
+/* overlay */
+.cc-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+  display: none;
+  align-items: center;
+  justify-content: center
+}
+
+.cc-overlay.show {
+  display: flex
+}
+
+.cc-panel {
+  background: linear-gradient(180deg, rgba(5, 20, 28, 0.96), rgba(3, 12, 16, 0.94));
+  padding: 20px;
+  border-radius: 12px;
+  width: 640px;
+  border: 1px solid rgba(0, 255, 170, 0.06);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7)
+}
+
+/* utility */
+.cc-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 255, 170, 0.06);
+  display: inline-block;
+  font-size: 12px
+}
+
+/* ============================
+   INTERACTIVE RADAR UPGRADE
+   (add below your existing CSS)
+   ============================ */
+
+/* allow radar to move smoothly with JS transform */
+.cc-radar {
+  transition: transform 0.15s ease-out;
+  position: relative;
+  overflow: visible;
+}
+
+/* sweep animation more visible + dynamic */
+.cc-sweep .sector {
+  animation: sweep 4.5s linear infinite;
+  transform-origin: center;
+  transition: transform 0.15s ease-out;
+}
+
+/* hover glow pulse */
+.cc-scan-area:hover .cc-radar {
+  filter: drop-shadow(0 0 18px rgba(0, 255, 200, 0.32));
+  transform: scale(1.04);
+}
+
+/* radar click pulse waves */
+.radar-wave {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 170, 0.2);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: radarWave 1s ease-out forwards;
+}
+
+@keyframes radarWave {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* strengthen glow on click */
+.cc-scan-area:active .cc-glow {
+  opacity: 0.45;
+  filter: blur(50px);
+  transition: 0.25s;
+}
+
+/* dynamic jargon text */
+.cc-jargon {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  opacity: 0.9;
+  text-shadow: 0 0 6px rgba(0, 255, 160, 0.1);
+}
+
+/* smoother progress animation */
+.cc-progress>i {
+  transition: width 900ms cubic-bezier(.19, .9, .22, 1);
 }
