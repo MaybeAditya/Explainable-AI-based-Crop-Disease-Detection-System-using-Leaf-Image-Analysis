@@ -98,7 +98,7 @@ Continue
 <header className="header">
 
 <h1>LeafAI Command Dashboard</h1>
-
+//language support
 <select>
 <option>English</option>
 <option>हिन्दी</option>
