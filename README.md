@@ -5,16 +5,16 @@ LeafAI is an enterprise-grade, full-stack web application designed to detect pla
 
 ![LeafAI Preview](https://via.placeholder.com/1000x500.png?text=LeafAI+Dashboard+Screenshot)
 
-## ✨ Key Features
+##  Key Features
 
-### 🎨 Enterprise Frontend & Cinematic UX
+###  Enterprise Frontend & Cinematic UX
 *   **Glassmorphic Bento Grid:** Dynamic, responsive masonry layout using `react-tilt` for 3D card physics and fluid CSS grid architecture.
 *   **Deep-Scan HUD Animation:** Custom CSS keyframe animations simulating a robotic vision/laser scan over the uploaded image.
 *   **WebGL Particle Physics:** Context-aware background particles (`react-tsparticles`) that change color, speed, and density based on the AI's severity assessment.
 *   **Fluid Motion & Transitions:** Smooth layout animations and skeleton loaders powered by `framer-motion`.
 *   **Dark/Light Mode:** Full CSS variable-based theming with automatic contrast adjustments.
 
-### 🧠 Advanced AI Backend
+### Advanced AI Backend
 *   **Multimodal Inference:** Utilizes `gemini-2.5-flash` to process image buffers and return structured JSON diagnostics (prediction, confidence score, summary, and treatments).
 *   **Botanist AI Copilot:** A built-in, context-aware chat sidebar that allows users to ask follow-up questions about the diagnosed disease (e.g., "Can I use neem oil for this?").
 *   **Streamlined Express API:** Handles `multipart/form-data` via Multer, processing images entirely in memory/temp storage before sending payloads to the AI model.
@@ -39,7 +39,7 @@ LeafAI is an enterprise-grade, full-stack web application designed to detect pla
 
 ---
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 *   [Node.js](https://nodejs.org/) (v16 or higher)
