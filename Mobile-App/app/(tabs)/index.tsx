@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Text
 } from "react-native";
-
+//index main
 export default function HomeScreen() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
