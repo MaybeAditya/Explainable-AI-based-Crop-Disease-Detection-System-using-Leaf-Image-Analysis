@@ -1,4 +1,6 @@
 https://github.com/MaybeAditya/Explainable-AI-based-Crop-Disease-Detection-System-using-Leaf-Image-Analysis/graphs/contributors?all=1
+
+
 <img width="450" height="450" alt="qrcode_plant-diseases-app vercel app" src="https://github.com/user-attachments/assets/67910fff-f35a-499b-a5ac-00a626d56478" />
 
 
@@ -33,6 +35,7 @@ LeafAI is an enterprise-grade, full-stack web application designed to detect pla
 *   React-tsParticles (Background Physics)
 *   React-Hot-Toast (Notifications)
 *   Axios
+  
 
 **Backend:**
 *   Node.js & Express.js
