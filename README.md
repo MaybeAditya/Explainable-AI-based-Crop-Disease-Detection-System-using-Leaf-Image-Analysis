@@ -48,7 +48,8 @@ LeafAI is an enterprise-grade, full-stack web application designed to detect pla
 
 ### Prerequisites
 *   [Node.js](https://nodejs.org/) (v16 or higher)
-*   A free API Key from [Google AI Studio](https://aistudio.google.com/)
+*   Express/Node
+
 
 ### 1. Clone the repository
 ```bash
