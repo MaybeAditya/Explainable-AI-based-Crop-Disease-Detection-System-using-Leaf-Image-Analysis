@@ -31,8 +31,6 @@ jargon[Math.floor(Math.random()*jargon.length)]
 return ()=>clearInterval(interval);
 
 },[]);
-
-
 function handleFile(e){
 const f=e.target.files[0];
 if(!f) return;
@@ -41,7 +39,6 @@ setPreview(URL.createObjectURL(f));
 }
 
 async function scan(){
-
 if(!file){
 alert("Upload leaf image");
 return;
@@ -54,7 +51,6 @@ const res=await axios.post(
 "http://localhost:5000/predict",
 form
 );
-
 setResult(res.data);
 }
 
@@ -64,7 +60,6 @@ if(conf>85) return "High";
 if(conf>60) return "Moderate";
 return "Low";
 }
-
 function health(conf){
 return 100-conf;
 }
@@ -138,13 +133,10 @@ onChange={handleFile}
 {/* MIDDLE PANEL */}
 
 <div className="panel feed">
-
 <h3>Live Analysis Feed</h3>
-
 {logs.map((l,i)=>(
 <p key={i}>{l}</p>
 ))}
-
 </div>
 
 
@@ -157,7 +149,6 @@ onChange={handleFile}
 {result ? (
 
 <>
-
 <p><strong>Disease:</strong> {result.prediction}</p>
 
 <p>
@@ -171,45 +162,34 @@ onChange={handleFile}
 className="bar-fill"
 style={{width:result.confidence+"%"}}
 />
-
 </div>
-
 <p>
 <strong>Health Score:</strong>
 {health(result.confidence)}
 </p>
-
 <p>
 <strong>Severity:</strong>
 {severity(result.confidence)}
 </p>
 
 <p className="summary">
-
 {result.summary}
 
 </p>
 
 <ul>
-
 {result.recommendations.map((r,i)=>(
 <li key={i}>{r}</li>
 ))}
-
 </ul>
-
 </>
-
 ):
 
 <p>No scan yet</p>
 
 }
-
 </div>
-
 </div>
-
 </div>
 
 );
