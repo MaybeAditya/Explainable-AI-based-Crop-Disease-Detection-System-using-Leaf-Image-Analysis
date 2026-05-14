@@ -97,13 +97,6 @@ JSON
   "summary": "Early blight is a fungal disease that causes...",
   "recommendations": ["Apply copper-based fungicide", "Ensure good airflow"]
 }
-
-
-### `POST /chat`
-*   **Description:** Context-aware chatbot for follow-up questions.
-*   **Payload:** JSON (`{ "message": "...", "context": {...} }`)
-*   **Response:** `{ "reply": "Yes, neem oil is highly effective..." }`
-
 ---
 
 ##  Author
